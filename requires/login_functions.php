@@ -49,4 +49,8 @@ function check_login($dbc, $username = '', $pass = '')
 
     return array(false, $errors);
 }
+function isLoggedIn()
+{
+    return ((isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['agent'])) && $_SESSION['agent'] === md5($_SERVER['HTTP_USER_AGENT']));
+}
  ?>
