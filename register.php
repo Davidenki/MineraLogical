@@ -93,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $errors[4] = '<div class="alert alert-danger text-center" role="alert"><strong>Your Password and Confirm Password don\'t match!</strong></div>';
         }
     }
-}
 
 
 //Little function that returns the value of the key of the POST array if it is set, sticky forms functionality
