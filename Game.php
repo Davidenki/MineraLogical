@@ -182,7 +182,7 @@
             <?php if($_SESSION['gameover'] === false) { echo 'setInterval(Timer, 1000);'; } ?>
             
             function Timer(){
-                totalSeconds += 1;
+                totalSeconds <?php echo $grid->getTimeTrial(); ?>= 1;
                 const hours = timeToString(Math.floor(totalSeconds/3600));
                 const minutes = timeToString(Math.floor(totalSeconds/60));
                 const seconds = timeToString(Math.floor(totalSeconds%60));
@@ -252,10 +252,7 @@
                     data:  param,
                     url:   'game_process.php',
                     type:  'post',
-                    success:  function (response) {
-                        //$("#gameContainer").html(response);
-                        location.reload();
-                    }
+                    success:  function (response) { location.reload(); }
                 });
             }
             

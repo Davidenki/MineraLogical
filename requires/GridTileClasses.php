@@ -116,6 +116,13 @@
             $this->time = $newTime;
         }
         
+        private $timeTrial = '+';
+        
+        public function getTimeTrial()
+        {
+            return $this->timeTrial;
+        }
+        
         public function __construct($cols, $rows, $mines) {
             $this->cols = $cols;
             $this->rows = $rows;
