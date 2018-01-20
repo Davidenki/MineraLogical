@@ -1,13 +1,13 @@
 <?php
-session_start();
+session_start(); //Start the session
 
+//Require the login functions
 require("requires/login_functions.php");
 
+//If the user is not logged in redirect him to the login page
 if(!isLoggedIn()) { redirect_user("Login.php"); }
 
-include("includes/header.html");
-
-
+include("includes/header.html"); //Include the header
 
 ?>
 <div id="accordionOne">
@@ -42,6 +42,9 @@ include("includes/header.html");
                             <div class="carousel-item">
                                 <canvas id="myChart1-3"></canvas> 
                             </div>
+                            <div class="carousel-item">
+                                <canvas id="myChart1-7"></canvas> 
+                            </div>
                           </div>
                           <a class="carousel-control-prev" href="#carousel1-1" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -74,6 +77,9 @@ include("includes/header.html");
                         <div class="carousel-item">
                             <canvas id="myChart1-6"></canvas> 
                         </div>
+                        <div class="carousel-item">
+                            <canvas id="myChart1-8"></canvas> 
+                        </div>
                       </div>
                       <a class="carousel-control-prev" href="#carousel1-2" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -91,44 +97,26 @@ include("includes/header.html");
           
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header text-center">
-      <a class="collapsed card-link" data-toggle="collapse" data-parent="#accordionOne" href="#collapseTwo">
-        Collapsible Group Item #2
-      </a>
-    </div>
-    <div id="collapseTwo" class="collapse">
-      <div class="card-body">
-        <canvas id="myChart2"></canvas>      
-      </div>
-    </div>
-  </div>
-    
+  </div>   
 </div>
 <div>
-<a href="MainMenu.php">Return to Main Menu</a>
+<a href="MainMenu.php">Return to Main Menu</a> <!-- Link to return to the Main Menu-->
 </div>
-
-<!--<div class="chart-container" style="position: relative; height:40vh; width:50vw">
-    <canvas id="myChart"></canvas>
-    <canvas id="myChart2"></canvas>
-</div>-->
 
 <?php
 
-require('requires/mysqli_connect.php');
+require('requires/mysqli_connect.php'); //Connect to the database
 
+
+//Query that gets the Wins Loses and Total Games played (Wins+Loses) of the user for each difficulty
 $q = "SELECT ES.Wins AS EasyWins, ES.Loses AS EasyLoses, (ES.Wins+ES.Loses) AS TotalEasy,
              MS.Wins AS MediumWins, MS.Loses AS MediumLoses, (MS.Wins+MS.Loses) AS TotalMedium,
              HS.Wins AS HardWins, HS.Loses AS HardLoses, (HS.Wins+HS.Loses) AS TotalHard,
-             (ES.Wins+MS.Wins+hS.Wins) AS TotalWins,
-             (ES.Loses+MS.Loses+hS.Loses) AS TotalLoses
+             (ES.Wins+MS.Wins+HS.Wins) AS TotalWins,
+             (ES.Loses+MS.Loses+HS.Loses) AS TotalLoses
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
 			INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
 				INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-					INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID
         WHERE U.UserID = ".$_SESSION['user_id'].";";
 
 $r = mysqli_query($dbc, $q);
@@ -143,7 +131,7 @@ if(mysqli_num_rows($r) === 1)
     Chart.defaults.global.defaultFontFamily = "sans-serif";
     
     
-    //WINS/LOSES ALL TIME CHART
+    //WINS AND LOSES CHART
     const ctx11 = document.getElementById("myChart1-1").getContext("2d");
     const myChart11 = new Chart(ctx11, {
         type: 'bar',
@@ -201,12 +189,12 @@ if(mysqli_num_rows($r) === 1)
     });
     
 <?php
-    
-$q = "SELECT ES.Streak AS EasyStreak, MS.Streak AS MediumStreak, HS.Streak AS HardStreak, MSC.Streak AS AllStreak
+
+//Query that gets the Win Streaks of the user for each difficulty
+$q = "SELECT ES.Streak AS EasyStreak, MS.Streak AS MediumStreak, HS.Streak AS HardStreak
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
 			INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
 				INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-					INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID
         WHERE U.UserID = ".$_SESSION['user_id'].";";
 
 $r = mysqli_query($dbc, $q);
@@ -222,19 +210,13 @@ if(mysqli_num_rows($r) === 1)
     const myChart12 = new Chart(ctx12, {
         type: 'bar',
         data: {
-            labels: ["Easy", "Medium", "Hard", "All"],
+            labels: ["Easy", "Medium", "Hard"],
             datasets: [{
                 label: 'Current',
-                data: [<?php if(isset($rowStreaks)) { echo $rowStreaks['EasyStreak'].", ".$rowStreaks['MediumStreak'].", ".$rowStreaks['HardStreak'].", ".$rowStreaks['AllStreak']; } ?>],
+                data: [<?php if(isset($rowStreaks)) { echo $rowStreaks['EasyStreak'].", ".$rowStreaks['MediumStreak'].", ".$rowStreaks['HardStreak']; } ?>],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
-            }, {
-                label: 'Best',
-                data: [<?php if(isset($rowStreaks)) { echo $rowStreaks['EasyStreak'].", ".$rowStreaks['MediumStreak'].", ".$rowStreaks['HardStreak'].", ".$rowStreaks['AllStreak']; } ?>],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
             }]
         },
         options: {
@@ -270,14 +252,15 @@ if(mysqli_num_rows($r) === 1)
     
     
 <?php
-    
+
+//Query that gets the Tiles Opened of the user for each difficulty
+//We will do the average in the chart
 $q = "SELECT ES.TilesOpened AS EasyTiles, (ES.Wins+ES.Loses) AS TotalEasy,
              MS.TilesOpened AS MediumTiles, (MS.Wins+MS.Loses) AS TotalMedium,
              HS.TilesOpened AS HardTiles, (HS.Wins+HS.Loses) AS TotalHard
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
 			INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
 				INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-					INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID
         WHERE U.UserID = ".$_SESSION['user_id'].";";
 
 $r = mysqli_query($dbc, $q);
@@ -340,12 +323,12 @@ if(mysqli_num_rows($r) === 1)
     });
     
 <?php
-    
+
+//Query that gets the Average Wins of the users
 $q = "SELECT AVG(ES.Wins) AS EasyWinsAVG, AVG(MS.Wins) AS MediumWinsAVG, AVG(HS.Wins) AS HardWinsAVG
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
                 INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
-                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-                        INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID";
+                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)";
 
 $r = mysqli_query($dbc, $q);
 if(mysqli_num_rows($r) === 1)
@@ -361,12 +344,14 @@ if(mysqli_num_rows($r) === 1)
             labels: ["Easy", "Medium", "Hard"],
             datasets: [{
                 label: 'YOU',
+                //Put here the values we got in the first query
                 data: [<?php if(isset($rowWinsLoses)) { echo $rowWinsLoses['EasyWins'].", ".$rowWinsLoses['MediumWins'].", ".$rowWinsLoses['HardWins']; } ?>],
                 backgroundColor: 'rgba(51, 204, 51, 0.2)',
                 borderColor: 'rgba(51, 204, 51, 1)',
                 borderWidth: 1
             }, {
                 label: 'USERS',
+                //Put here the values we got in the last query
                 data: [<?php if(isset($rowWinsU)) { echo $rowWinsU['EasyWinsAVG'].", ".$rowWinsU['MediumWinsAVG'].", ".$rowWinsU['HardWinsAVG']; } ?>],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -405,11 +390,12 @@ if(mysqli_num_rows($r) === 1)
     });
     
 <?php
+    
+//Query that gets the Average Win Streak of the users
 $q = "SELECT AVG(ES.Streak) AS EasyStreakAVG, AVG(MS.Streak) AS MediumStreakAVG, AVG(HS.Streak) AS HardStreakAVG
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
                 INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
-                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-                        INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID";
+                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)";
 
 $r = mysqli_query($dbc, $q);
 if(mysqli_num_rows($r) === 1)
@@ -469,13 +455,14 @@ if(mysqli_num_rows($r) === 1)
     });
     
 <?php
+    
+//Query that gets total of the Tiles Opened by all users
 $q = "SELECT (SUM(ES.TilesOpened)/SUM(ES.Wins+ES.Loses)) AS EasyTilesAVG,
              (SUM(MS.TilesOpened)/SUM(MS.Wins+MS.Loses)) AS MediumTilesAVG,
              (SUM(HS.TilesOpened)/SUM(HS.Wins+HS.Loses)) AS HardTilesAVG
         FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
                 INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
-                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
-                        INNER JOIN MiscScores AS MSC ON U.UserID = MSC.UserID";
+                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)";
 
 $r = mysqli_query($dbc, $q);
 if(mysqli_num_rows($r) === 1)
@@ -533,4 +520,133 @@ if(mysqli_num_rows($r) === 1)
             }
         }
     });
+<?php
+    
+//Query that gets the Best Time of the user for each difficulty
+$q = "SELECT ES.BestTime AS EasyTime, MS.BestTime AS MediumTime, HS.BestTime AS HardTime
+        FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
+                INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
+                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)
+        WHERE U.UserID = ".$_SESSION['user_id']."";
+
+$r = mysqli_query($dbc, $q);
+if(mysqli_num_rows($r) === 1)
+{
+    $rowTimes = mysqli_fetch_array($r, MYSQLI_ASSOC);
+}
+
+?>     
+    const ctx17 = document.getElementById("myChart1-7").getContext("2d");
+    const myChart17 = new Chart(ctx17, {
+        type: 'bar',
+        data: {
+            labels: ["Easy", "Medium", "Hard"],
+            datasets: [{
+                label: 'BEST TIME',
+                data: [<?php if(isset($rowTimes)) { echo $rowTimes['EasyTime'].", ".$rowTimes['MediumTime'].", ".$rowTimes['HardTime']; } ?>],
+                backgroundColor: 'rgba(51, 204, 51, 0.2)',
+                borderColor: 'rgba(51, 204, 51, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        fontSize: 20,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        fontSize: 20,
+                        fontStyle: 'bold'
+                    }                     
+                }]
+            },
+            legend: {
+                labels: {
+                    fontColor: 'black',
+                    fontSize: 20,
+                    fontStyle: 'bold'
+                }
+            },
+            title: {
+                display: true,
+                text: "BEST TIMES"
+            }
+        }
+    });  
+
+<?php
+    
+//Query that gets the Best Time of all users for each difficulty
+$q = "SELECT AVG(ES.BestTime) AS AVGEasyTime, AVG(MS.BestTime) AS AVGMediumTime, AVG(HS.BestTime) AS AVGHardTime
+        FROM (((Users AS U INNER JOIN EasyScores AS ES ON U.UserID = ES.UserID)
+                INNER JOIN MediumScores AS MS ON U.UserID = MS.UserID)
+                    INNER JOIN HardScores AS HS ON U.UserID = HS.UserID)";
+
+$r = mysqli_query($dbc, $q);
+if(mysqli_num_rows($r) === 1)
+{
+    $rowTimesU = mysqli_fetch_array($r, MYSQLI_ASSOC);
+}
+
+?>     
+    const ctx18 = document.getElementById("myChart1-8").getContext("2d");
+    const myChart18 = new Chart(ctx18, {
+        type: 'bar',
+        data: {
+            labels: ["Easy", "Medium", "Hard"],
+            datasets: [{
+                label: 'YOU',
+                data: [<?php if(isset($rowTimes)) { echo $rowTimes['EasyTime'].", ".$rowTimes['MediumTime'].", ".$rowTimes['HardTime']; } ?>],
+                backgroundColor: 'rgba(51, 204, 51, 0.2)',
+                borderColor: 'rgba(51, 204, 51, 1)',
+                borderWidth: 1
+            },{
+                label: 'AVG USERS',
+                data: [<?php if(isset($rowTimesU)) { echo $rowTimesU['AVGEasyTime'].", ".$rowTimesU['AVGMediumTime'].", ".$rowTimesU['AVGHardTime']; } ?>],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        fontSize: 20,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        fontSize: 20,
+                        fontStyle: 'bold'
+                    }                     
+                }]
+            },
+            legend: {
+                labels: {
+                    fontColor: 'black',
+                    fontSize: 20,
+                    fontStyle: 'bold'
+                }
+            },
+            title: {
+                display: true,
+                text: "BEST TIMES"
+            }
+        }
+    }); 
+
 </script>
+
+<?php
+include("includes/footer.html");
+?>

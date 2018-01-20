@@ -1,0 +1,58 @@
+body {
+        background: #ffffb3;
+    }
+    
+    .jumbotron h1 {
+        font-size: 64px;
+    }
+    
+    .lo-btn {
+        font-weight: 500;
+        font-size: 34px;
+    }
+
+    .btn-lg, .btn-md {
+        background: #fce903;
+    }
+    
+    .btn-lg {
+        box-shadow: none;
+        margin-bottom: -3px;
+        margin-top: 3px;
+        padding: 10% 0; 
+        height: 300px !important;
+        width: 500px !important;
+    }
+    
+    .btn-block {
+        background: #fce903;
+        box-shadow: none;
+    }
+    
+    .diff-btn h1 {
+        font-weight: bold;
+        font-size: 54px;
+    }
+    
+    .diff-btn h2,h4 {
+        font-weight: bold;
+    }
+    
+    .diff-btn h2{
+        font-size: 54px;
+    }
+    
+    .diff-btn h4{
+        font-size: 32px;
+    }
+    
+    .stats-btn {
+        height: 200px;
+        width: 80%;
+    }
+    
+    .stats-btn h1 {
+        font-weight: bold;
+        font-size: 100px;
+        margin: 0;
+    }

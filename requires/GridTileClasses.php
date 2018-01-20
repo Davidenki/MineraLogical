@@ -14,8 +14,14 @@
         {
             if(!$this->open)
             {
-                if($this->marked) { return '<td class="tile-marked" onmouseup="javascript:performMarkTileProcess(event,'.$this->x.','.$this->y.')"></td>'; }
-                else              { return '<td class="tile-closed" onmouseup="javascript:performOpenTileProcess(event,'.$this->x.','.$this->y.')"></td>'; }
+                if($this->marked)
+                {
+                    return '<td class="tile-marked" onmouseup="javascript:performMarkTileProcess(event,'.$this->x.','.$this->y.')"></td>';
+                }
+                else
+                {
+                    return '<td class="tile-closed" onmouseup="javascript:performOpenTileProcess(event,'.$this->x.','.$this->y.')"></td>';
+                }
             }
             else
             {

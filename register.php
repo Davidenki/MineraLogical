@@ -57,35 +57,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 if($result == -1)
                 {
                     //Result = -1 means that the Username introduced was already in the database, show an error message
-                    echo '<h1>Error</h1>
-                    <p class="error">The Username introduced already exists.</p>'; 
+                    $errors[4] = '<div class="alert alert-danger text-center" role="alert"><strong>The Username introduced already exists!</strong></div>';
                 }
                 else if($result == -2)
                 {
                     //Result = -2 means that the email introduced was already in the database, show an error message
-                    echo '<h1>Error</h1>
-                    <p class="error">The Email introduced already exists.</p>';                     
+                    $errors[4] = '<div class="alert alert-danger text-center" role="alert"><strong>The Email introduced already exists!</strong></div>';                    
                 }
                 else
                 {
                     //If we are here that means the registration was successful
                     echo '<h1>Thank you!</h1>
-                    <p>You are now registered.</p><br /><p><a href="Login.php">Go to Login page</a></p>';                
+                    <p>You are now registered '.$u.'!</p><br /><p><a href="Login.php">Go to Login page</a></p>';
+                    
+                    mysqli_close($dbc); //Close the database connection
+                    exit();
                 }
             }
             else
             {
                 //If it did not run correctly, show an error message
                 echo '<h1>System Error</h1>
-                <p class="error">You could not be registered due to a system error. We apologize for any inconvenience.</p>'; 
+                <p class="error">You could not be registered due to a system error. We apologize for any inconvenience.</p>
+                <p><a href="Register.php">Return to the Register page</a></p>'; 
 
                 echo '<p>'.mysqli_error($dbc).'<br /><br />Query: '.$q.'</p>';
+                mysqli_close($dbc); //Close the database connection
+                exit();
             }
-            
-            mysqli_close($dbc); //Close the database connection
-
-            include ('includes/footer.html'); //Include the footer
-            exit(); //Exit the script
         }
         else
         {
@@ -93,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $errors[4] = '<div class="alert alert-danger text-center" role="alert"><strong>Your Password and Confirm Password don\'t match!</strong></div>';
         }
     }
-
+}
 
 //Little function that returns the value of the key of the POST array if it is set, sticky forms functionality
 //This function is for a better read and encapsulation of the code
@@ -107,7 +106,7 @@ function getPostValue($name)
 
 <div class="h-100 row align-items-center justify-content-center">
     <div class="col-6">
-        <form class="form-control" action="Register.php" method="POST">
+        <form class="form-control" action="register.php" method="POST">
             <?php if(isset($errors[4])) { echo $errors[4]; }?> <!-- If the value of errors[4] is set, show the error message-->
             <div class="form-group">
                 <label for="username"><b>Username</b></label>
@@ -149,7 +148,7 @@ function getPostValue($name)
                 <input class="btn btn-def btn-block" type="submit" value="GO!" />
             </div>
             <div class="form-group text-center">
-                <a href="Login.php">Volver al menú de LogIn</a>
+                <a href="Login.php">Return to the LogIn page</a>
             </div>
         </form>
     </div>

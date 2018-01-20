@@ -64,7 +64,7 @@ include("includes/header.html"); //Include the header
                 <div class="col-xs-12 col-lg-6">
                     <div class="row">
                         <div class="col-6 col-lg-12">
-                            <a href="Register.php">New Account</a>
+                            <a href="register.php">New Account</a> <!-- Link to the Register page -->
                         </div>
                         <div class="col-6 col-md-12">
                             <a href="#">Forgot password?</a>
